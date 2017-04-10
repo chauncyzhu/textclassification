@@ -15,9 +15,10 @@ pd_train = pd.read_csv(train_csv)
 pd_test = pd.read_csv(test_csv)
 
 #控制训练集和测试集数量
-pd_test = pd_test.head(20)
+pd_test = pd_test.head(50)
 
-#调用KNN
-result = knn.KNN(pd_train,pd_test,k_list)
-evaluation_result = knn.evaluation(result,class_num,k_list)
-print(evaluation_result)
+if __name__ == '__main__':
+    #调用KNN
+    result = knn.KNN(pd_train,pd_test,k_list)
+    evaluation_result = knn.evaluation(result,class_num,k_list)
+    print(evaluation_result)

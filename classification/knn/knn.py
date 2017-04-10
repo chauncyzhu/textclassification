@@ -6,6 +6,7 @@ import time
 from threading import Thread
 from multiprocessing import Process,Manager
 import multiprocessing
+import math
 """
     找最近的K个邻居
 """
@@ -16,6 +17,16 @@ def __getOriginalValue(value):
         return list(eval(value))
     else:
         return list(value)
+
+#将dataframe数据等分成number份
+def __getSplitPDData(pd_data,number):
+    #对测试集分割成POOL_NUM份
+    pd_data_len = len(pd_data)
+    number = float(number)  #转成浮点数
+    split_len = int(math.floor(pd_data_len/number))
+    multi_pd_data = [pd_data[m:m+split_len] for m in range(pd_data_len) if m % split_len == 0]
+    return multi_pd_data
+
 
 #计算两个向量的距离，使用欧氏距离
 def __calDistance(vector_one,vector_two):
@@ -65,13 +76,17 @@ def KNN(pd_train,pd_test,k_list):
     #对于每个测试集
     begin = time.time()
     result = Manager().list()  #进程各自持有一份数据，默认无法共享数据，因此使用manager的list实现数据共享，注意，这个是在下面的append、get出错之后采取的第二种方法
-    pool = multiprocessing.Pool(processes=POOL_NUM)  # 创建4个进程，进程池设置最好等于CPU核心数量
-
-
-    pool.apply_async(getKNNCore,(pd_test, pd_train, k_list, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
-
+    #result = list()  #由于Manager().list()，而result内部与顺序无关，因此直接append
+    pool = multiprocessing.Pool()  # 创建4个进程，进程池设置最好等于CPU核心数量
+    multi_data = __getSplitPDData(pd_test,POOL_NUM)  #等分成POOL_NUM份
+    for data in multi_data:
+        pool.apply_async(getKNNCore,(data, pd_train, k_list, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
+    pool.close()  # 关闭进程池，表示不能再往进程池中添加进程，需要在join之前调用，close()会等待池中的worker进程执行结束再关闭pool,而terminate()则是直接关闭
+    pool.join()  # 等待进程池中的所有进程执行完毕
     end = time.time()
     print("total time:",end-begin)
+    for i in result:
+        print("result:",result)
     return result
 
 #对分类进过进行评估
@@ -115,3 +130,11 @@ def evaluation(result_data,class_num,k_list):
         micro_f1 = 2*micro_p*micro_r/(micro_p+micro_r)  #微平均
         evaluation_result.append([macro_f1,micro_f1])
     return evaluation_result
+
+
+if __name__ == '__main__':
+    pd_data = pd.DataFrame(range(55))
+    number = 4
+    multi_data = __getSplitPDData(pd_data, number)
+    for data in multi_data:
+        print(data)
