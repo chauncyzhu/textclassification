@@ -85,8 +85,6 @@ def KNN(pd_train,pd_test,k_list):
     pool.join()  # 等待进程池中的所有进程执行完毕
     end = time.time()
     print("total time:",end-begin)
-    for i in result:
-        print("result:",result)
     return result
 
 #对分类进过进行评估
@@ -108,10 +106,10 @@ def evaluation(result_data,class_num,k_list):
                     fp += 1
                 if result_data[j][0] != i and result_data[j][1][k] != i: # 真实为负，预测为负
                     tn += 1
-                true_pos.append(tp)
-                false_neg.append(fn)
-                false_pos.append(fp)
-                true_neg.append(tn)
+            true_pos.append(tp)  #修正错误
+            false_neg.append(fn)
+            false_pos.append(fp)
+            true_neg.append(tn)
             if tp+fp == 0:
                 p = 0
             else:
@@ -124,10 +122,22 @@ def evaluation(result_data,class_num,k_list):
             recall.append(r)
         macro_p = sum(precision)/class_num
         macro_r = sum(recall)/class_num
-        macro_f1 = 2*macro_p*macro_r/(macro_p+macro_r)  #宏平均
-        micro_p = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_pos))/len(false_pos))
-        micro_r = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_neg))/len(false_neg))
-        micro_f1 = 2*micro_p*micro_r/(micro_p+micro_r)  #微平均
+        if macro_p+macro_r == 0:
+            macro_f1 = 0
+        else:
+            macro_f1 = 2*macro_p*macro_r/(macro_p+macro_r)  #宏平均
+        if float(sum(true_pos))/len(true_pos)+float(sum(false_pos))/len(false_pos) == 0:
+            micro_p = 0
+        else:
+            micro_p = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_pos))/len(false_pos))
+        if float(sum(true_pos))/len(true_pos)+float(sum(false_neg))/len(false_neg) == 0:
+            micro_r = 0
+        else:
+            micro_r = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_neg))/len(false_neg))
+        if micro_p+micro_r == 0:
+            micro_f1 = 0
+        else:
+            micro_f1 = 2*micro_p*micro_r/(micro_p+micro_r)  #微平均
         evaluation_result.append([macro_f1,micro_f1])
     return evaluation_result
 
