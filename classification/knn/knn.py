@@ -10,9 +10,9 @@ import math
 """
     找最近的K个邻居
 """
-POOL_NUM = 4  #创建4个线程
-#用eval将str转为list
-def __getOriginalValue(value):
+POOL_NUM = 2  #创建4个线程
+# 用eval将str转为list
+def getOriginalValue(value):
     if type(value) == types.StringType:
         return list(eval(value))
     else:
@@ -45,29 +45,27 @@ def getKNNCore(pd_test,pd_train,k_list,result):
     for index_test,row_test in pd_test.iterrows():
         #if index_test%200 == 0:
         print("has predict test doc num:",index_test)
-        test_vector = __getOriginalValue(row_test['vector'])
-        test_class = __getOriginalValue(row_test['class']).index(1)  #因为每个文档只属于一个类，因此可以直接index
+        test_vector = eval(row_test['vector'])
+        test_class = eval(row_test['class']).index(1)  #因为每个文档只属于一个类，因此可以直接index
         #计算测试集和训练集的距离，并根据distance进行排序
         pd_distance = pd.DataFrame(data=[[[0],[0]]]*len(pd_train),columns=['class','distance'])   #第一个为所属类别，第二个为距离，index即对应的训练集序号
-
         #下面循环代码可以使用多线程
         for index_train,row_train in pd_train.iterrows():
-            #if index_test % 200 == 0 and index_train % 1000 == 0:
+            #if index_train % 1000 == 0:
                 #print('has handle train doc num:', index_train, 'total num:', len(pd_train))
-            pd_distance['class'][index_train] = __getOriginalValue(row_train['class'])
-            # print("row_train['vector']",row_train['vector'])
-            # print(eval(row_train['vector']))
-            train_vector = __getOriginalValue(row_train['vector'])
+            pd_distance['class'][index_train] = eval(row_train['class'])
+            #print("row_train['vector']",row_train['vector'])
+            #print(eval(row_train['vector']))
+            train_vector = eval(row_train['vector'])
             pd_distance['distance'][index_train] = __calDistance(train_vector,test_vector)  #计算两个向量之间的距离
         #对distance_list进行处理
-        pd_distance = pd_distance.sort(columns='distance')  #指定列进行排序，需要返回值
+        pd_distance = pd_distance.sort_values(by='distance')  #指定列进行排序，需要返回值
 
         #取出最近的K个邻居
         neighbor = []
         for k in k_list:
             temp_np = np.array(pd_distance.head(k)['class']) #对应的类别
             neighbor.append(np.argmax(np.sum(temp_np,0)))  #sum沿着列进行求和，argmax找到最大值所在的位置
-
         #将结果封装
         result.append([test_class,neighbor])
 
@@ -90,6 +88,7 @@ def KNN(pd_train,pd_test,k_list):
 #对分类进过进行评估
 #result_data格式为，前面为测试集正确分类，后面为K个预测分类
 def evaluation(result_data,class_num,k_list):
+    print("classification result:",result_data)
     evaluation_result = []
     for k in range(len(k_list)):
         precision,recall = [0] * class_num,[0] * class_num
