@@ -6,13 +6,14 @@ import numpy as np
 """
     找出数据预处理的dataframe对应的字典列表
 """
-#获取data对应的字典
+#获取data对应的字典，可以在这里对低频词做一个筛选
 def getUniqueVocabulary(data):
     w = []  # 将所有词语整合在一起
     for i in data['content']:
         w.extend(i)
-    vocabulary = pd.DataFrame(pd.Series(w).value_counts())  #这里就隐含了tf值
-    vocabulary = vocabulary.rename(columns={0:'tf'})  #将value_counts值转为tf
+    vocabulary = pd.DataFrame(pd.Series(w).value_counts(),columns=['tf'])  #这里就隐含了tf值
+    vocabulary = vocabulary[vocabulary['tf'] > 10]   #去掉某些低频词
+    vocabulary = vocabulary[vocabulary['tf'] < 4000]  # 去掉某些高频词
     return vocabulary  #pd.DataFrame
 
 #传入需要统计相关值的dataframe和相对应的字典数据
