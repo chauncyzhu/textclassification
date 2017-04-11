@@ -80,7 +80,6 @@ def binary_class_data():
     __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_df_bdc_csv, test_df_bdc_csv)
 
 
-
 if __name__ == '__main__':
     #multi_class_data()
     binary_class_data()
