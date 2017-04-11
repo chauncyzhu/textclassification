@@ -108,21 +108,6 @@ def getTrainAndTest(sourcefile,class_num):
     #返回训练集和测试集
     return (pd_train,pd_test)
 
-    # train_num = [0]*class_num
-    # test_num = [0]*class_num
-    # for item in all_file_set:
-    #     if item[0] == 0:
-    #         for i in range(len(item[1])):
-    #             if item[1][i] == 1:
-    #                 train_num[i] += 1
-    #     elif item[0] == 1:
-    #         for i in range(len(item[1])):
-    #             if item[1][i] == 1:
-    #                 test_num[i] += 1
-    # print("train_num:",train_num)
-    # print("test_num:",test_num)
-    # print("train data",train)
-    # print("test data",test)
 
 if __name__ == '__main__':
     sourcefile = "../../data/reuters/reuter_all.xml"

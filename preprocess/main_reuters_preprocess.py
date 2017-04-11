@@ -66,12 +66,12 @@ def multi_class_data():
 
 #获得多分类数据
 def binary_class_data():
-    voca_csv = "../data/reuters/multiclass/voca_dict_binaryclass.csv"  # 字典
+    voca_csv = "../data/reuters/binaryclass/voca_dict_binaryclass.csv"  # 字典
 
-    train_bdc_csv = "../data/reuters/multiclass/reuter_train_binaryclass_bdc.csv"  # 分开的训练集
-    test_bdc_csv = "../data/reuters/multiclass/reuter_test_binaryclass_bdc.csv"  # 分开的测试集
-    train_df_bdc_csv = "../data/reuters/multiclass/reuter_train_binaryclass_df_bdc.csv"  # 分开的训练集
-    test_df_bdc_csv = "../data/reuters/multiclass/reuter_test_binaryclass_df_bdc.csv"  # 分开的测试集
+    train_bdc_csv = "../data/reuters/binaryclass/reuter_train_binaryclass_bdc.csv"  # 分开的训练集
+    test_bdc_csv = "../data/reuters/binaryclass/reuter_test_binaryclass_bdc.csv"  # 分开的测试集
+    train_df_bdc_csv = "../data/reuters/binaryclass/reuter_train_binaryclass_df_bdc.csv"  # 分开的训练集
+    test_df_bdc_csv = "../data/reuters/binaryclass/reuter_test_binaryclass_df_bdc.csv"  # 分开的测试集
 
     class_num = 2  # 二分类的类别个数
 
