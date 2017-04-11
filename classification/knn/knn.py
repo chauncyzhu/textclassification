@@ -41,7 +41,7 @@ def __calDistance(vector_one,vector_two):
     return np.sqrt(np.sum(np.square(vector_one - vector_two)))
 
 #KNN的核心，通过循环测试集来找到最近的K个训练及所属的分类，并用result包含起来，result是共享变量
-def getKNNCore(pd_test,pd_train,k_list,result):
+def knn_core(pd_test,pd_train,k_list,result):
     for index_test,row_test in pd_test.iterrows():
         #if index_test%200 == 0:
         print("has predict test doc num:",index_test)
@@ -70,7 +70,7 @@ def getKNNCore(pd_test,pd_train,k_list,result):
         result.append([test_class,neighbor])
 
 #传入训练集和测试集，都是dataframe类型，并使用多线程来处理测试集
-def KNN(pd_train,pd_test,k_list):
+def knn(pd_train,pd_test,k_list):
     #对于每个测试集
     begin = time.time()
     result = Manager().list()  #进程各自持有一份数据，默认无法共享数据，因此使用manager的list实现数据共享，注意，这个是在下面的append、get出错之后采取的第二种方法
@@ -78,72 +78,11 @@ def KNN(pd_train,pd_test,k_list):
     pool = multiprocessing.Pool()  # 创建4个进程，进程池设置最好等于CPU核心数量
     multi_data = __getSplitPDData(pd_test,POOL_NUM)  #等分成POOL_NUM份
     for data in multi_data:
-        pool.apply_async(getKNNCore,(data, pd_train, k_list, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
+        pool.apply_async(knn_core,(data, pd_train, k_list, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
     pool.close()  # 关闭进程池，表示不能再往进程池中添加进程，需要在join之前调用，close()会等待池中的worker进程执行结束再关闭pool,而terminate()则是直接关闭
     pool.join()  # 等待进程池中的所有进程执行完毕
     end = time.time()
     print("total time:",end-begin)
-    return result
 
-#对分类进过进行评估
-#result_data格式为，前面为测试集正确分类，后面为K个预测分类
-def evaluation(result_data,class_num,k_list):
-    print("classification result:",result_data)
-    evaluation_result = []
-    for k in range(len(k_list)):
-        precision,recall = [0] * class_num,[0] * class_num
-        true_pos,false_neg,false_pos,true_neg = [],[],[],[]
-        for i in range(class_num):  #i为正
-            tp,fn,fp,tn = 0,0,0,0
-            for j in range(len(result_data)):
-                #result_data[j][0]为真实标记，result_data[j][1][k]为第K个预测标记
-                if result_data[j][0] == i and result_data[j][1][k] == i: # 真实==预测==正
-                    tp += 1
-                if result_data[j][0] == i and result_data[j][1][k] != i: # 真实为正，预测为负
-                    fn += 1
-                if result_data[j][0] != i and result_data[j][1][k] == i: # 真实为负，预测为正
-                    fp += 1
-                if result_data[j][0] != i and result_data[j][1][k] != i: # 真实为负，预测为负
-                    tn += 1
-            true_pos.append(tp)  #修正错误
-            false_neg.append(fn)
-            false_pos.append(fp)
-            true_neg.append(tn)
-            if tp+fp == 0:
-                p = 0
-            else:
-                p = float(tp)/(tp+fp)
-            if tp+fn == 0:
-                r = 0
-            else:
-                r = float(tp)/(tp+fn)
-            precision.append(p)
-            recall.append(r)
-        macro_p = sum(precision)/class_num
-        macro_r = sum(recall)/class_num
-        if macro_p+macro_r == 0:
-            macro_f1 = 0
-        else:
-            macro_f1 = 2*macro_p*macro_r/(macro_p+macro_r)  #宏平均
-        if float(sum(true_pos))/len(true_pos)+float(sum(false_pos))/len(false_pos) == 0:
-            micro_p = 0
-        else:
-            micro_p = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_pos))/len(false_pos))
-        if float(sum(true_pos))/len(true_pos)+float(sum(false_neg))/len(false_neg) == 0:
-            micro_r = 0
-        else:
-            micro_r = (float(sum(true_pos))/len(true_pos))/(float(sum(true_pos))/len(true_pos)+float(sum(false_neg))/len(false_neg))
-        if micro_p+micro_r == 0:
-            micro_f1 = 0
-        else:
-            micro_f1 = 2*micro_p*micro_r/(micro_p+micro_r)  #微平均
-        evaluation_result.append([macro_f1,micro_f1])
-    return evaluation_result
-
-
-if __name__ == '__main__':
-    pd_data = pd.DataFrame(range(55))
-    number = 4
-    multi_data = __getSplitPDData(pd_data, number)
-    for data in multi_data:
-        print(data)
+    #对result进行处理，不知道为什么会是ListProxy object，用list()转为list
+    return list(result)
