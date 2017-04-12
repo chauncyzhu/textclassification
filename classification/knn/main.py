@@ -2,7 +2,7 @@
 import pandas as pd
 from classification.knn.knn import *
 from classification.knn.evaluation import *
-import utils.file_path as path
+import utils.reuters_path as path
 """
     这里是KNN的调用函数
 """
