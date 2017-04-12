@@ -9,6 +9,7 @@ import utils.reuters_path as path
    对函数进行调用，下面部分主要是对路透社语料库进行处理
 """
 TOP_CLASS_NUM = 8
+CONFIRM_POS_CLASS = 0  #指定二分类正类序号
 
 #数据清理和字典获取，多分类和二分类的class_num不一样
 def __voca_dict(class_num,voca_csv=None):
@@ -61,9 +62,19 @@ def binary_class_data():
     class_num = 2  # 二分类的类别个数
 
     pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv=path.VOCA_BINARY_CSV)  #获取多分类的字典，包括
+
+    #应该根据指定的正类改变二分类中的class
+    def f(x):
+        if x[CONFIRM_POS_CLASS] == 1:
+            return [1,0]
+        else:
+            return [0,1]
+    pd_train['class'] = pd_train['class'].apply(f)
+    pd_test['class'] = pd_test['class'].apply(f)
+
     __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_csv=path.TRAIN_BINARY_BDC_CSV, test_csv=path.TEST_BINARY_BDC_CSV)
     __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_BINARY_DF_BDC_CSV, test_csv=path.TEST_BINARY_DF_BDC_CSV)
 
 if __name__ == '__main__':
-    multi_class_data()
-    #binary_class_data()
+    #multi_class_data()
+    binary_class_data()
