@@ -4,17 +4,16 @@ import preprocess.data_clean.reuters.import_data as id
 import preprocess.transfer_vector.voca_dict.voca_data as vd
 import preprocess.transfer_vector.generate_vector.feature as feature
 import preprocess.transfer_vector.generate_vector.transfer_vector as tv
-import pandas as pd
+import utils.file_path as path
 """
    对函数进行调用，下面部分主要是对路透社语料库进行处理
 """
-SOURCEFILE = "../data/reuters/reuter_all.xml"   #路透社语料库
 TOP_CLASS_NUM = 8
 
 #数据清理和字典获取，多分类和二分类的class_num不一样
 def __voca_dict(class_num,voca_csv=None):
     # 数据获取和清理
-    pd_train, pd_test = id.getTrainAndTest(SOURCEFILE, TOP_CLASS_NUM)
+    pd_train, pd_test = id.getTrainAndTest(path.SOURCEFILE, TOP_CLASS_NUM)
     # 处理训练集
     cd.clean_data(pd_train)
     # 处理测试集
@@ -50,36 +49,21 @@ def __generate_vector(pd_train,pd_test,voca_dict,feature_name,train_csv=None,tes
 
 #多分类的数据处理操作
 def multi_class_data():
-    voca_csv = "../data/reuters/multiclass/voca_dict_multiclass.csv"  # 字典
-
-    train_bdc_csv = "../data/reuters/multiclass/reuter_train_multiclass_bdc.csv"  # 分开的训练集
-    test_bdc_csv = "../data/reuters/multiclass/reuter_test_multiclass_bdc.csv"  # 分开的测试集
-    train_df_bdc_csv = "../data/reuters/multiclass/reuter_train_multiclass_df_bdc.csv"  # 分开的训练集
-    test_df_bdc_csv = "../data/reuters/multiclass/reuter_test_multiclass_df_bdc.csv"  # 分开的测试集
-
     class_num = 8  # 多分类的类别个数
 
-    pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv)  #获取多分类的字典，包括
-    __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_bdc_csv, test_bdc_csv)
-    __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_df_bdc_csv, test_df_bdc_csv)
+    pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv=path.VOCA_MULTI_CSV)  #获取多分类的字典，包括
+    __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_csv=path.TRAIN_MULTI_BDC_CSV, test_csv=path.TEST_MULTI_BDC_CSV)
+    __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_MULTI_DF_BDC_CSV, test_csv=path.TEST_MULTI_DF_BDC_CSV)
 
 
 #获得多分类数据
 def binary_class_data():
-    voca_csv = "../data/reuters/binaryclass/voca_dict_binaryclass.csv"  # 字典
-
-    train_bdc_csv = "../data/reuters/binaryclass/reuter_train_binaryclass_bdc.csv"  # 分开的训练集
-    test_bdc_csv = "../data/reuters/binaryclass/reuter_test_binaryclass_bdc.csv"  # 分开的测试集
-    train_df_bdc_csv = "../data/reuters/binaryclass/reuter_train_binaryclass_df_bdc.csv"  # 分开的训练集
-    test_df_bdc_csv = "../data/reuters/binaryclass/reuter_test_binaryclass_df_bdc.csv"  # 分开的测试集
-
     class_num = 2  # 二分类的类别个数
 
-    pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv)  #获取多分类的字典，包括
-    __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_bdc_csv, test_bdc_csv)
-    __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_df_bdc_csv, test_df_bdc_csv)
-
+    pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv=path.VOCA_BINARY_CSV)  #获取多分类的字典，包括
+    __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_csv=path.TRAIN_BINARY_BDC_CSV, test_csv=path.TEST_BINARY_BDC_CSV)
+    __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_BINARY_DF_BDC_CSV, test_csv=path.TEST_BINARY_DF_BDC_CSV)
 
 if __name__ == '__main__':
-    #multi_class_data()
-    binary_class_data()
+    multi_class_data()
+    #binary_class_data()
