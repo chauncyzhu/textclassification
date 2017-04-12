@@ -4,7 +4,7 @@ import preprocess.data_clean.reuters.import_data as id
 import preprocess.transfer_vector.voca_dict.voca_data as vd
 import preprocess.transfer_vector.generate_vector.feature as feature
 import preprocess.transfer_vector.generate_vector.transfer_vector as tv
-import utils.file_path as path
+import utils.reuters_path as path
 """
    对函数进行调用，下面部分主要是对路透社语料库进行处理
 """
