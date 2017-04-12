@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/multiclass.iml" filepath="$PROJECT_DIR$/.idea/multiclass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../pythondata/.idea/pythondata.iml" filepath="$PROJECT_DIR$/../pythondata/.idea/pythondata.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/textclassification.iml" filepath="$PROJECT_DIR$/.idea/textclassification.iml" />
     </modules>
   </component>
