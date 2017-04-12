@@ -41,11 +41,11 @@ def __calDistance(vector_one,vector_two):
     return np.sqrt(np.sum(np.square(vector_one - vector_two)))
 
 #KNN的核心，通过循环测试集来找到最近的K个训练及所属的分类，并用result包含起来，result是共享变量
-def knn_core(pd_test,pd_train,k_list,result):
+def knn_core(pd_test,pd_train,k_list,feature_name,result):
     for index_test,row_test in pd_test.iterrows():
         #if index_test%200 == 0:
         print("has predict test doc num:",index_test)
-        test_vector = eval(row_test['vector'])
+        test_vector = eval(row_test[feature_name])
         test_class = eval(row_test['class']).index(1)  #因为每个文档只属于一个类，因此可以直接index
         #计算测试集和训练集的距离，并根据distance进行排序
         pd_distance = pd.DataFrame(data=[[[0],[0]]]*len(pd_train),columns=['class','distance'])   #第一个为所属类别，第二个为距离，index即对应的训练集序号
@@ -56,7 +56,7 @@ def knn_core(pd_test,pd_train,k_list,result):
             pd_distance['class'][index_train] = eval(row_train['class'])
             #print("row_train['vector']",row_train['vector'])
             #print(eval(row_train['vector']))
-            train_vector = eval(row_train['vector'])
+            train_vector = eval(row_train[feature_name])
             pd_distance['distance'][index_train] = __calDistance(train_vector,test_vector)  #计算两个向量之间的距离
         #对distance_list进行处理
         pd_distance = pd_distance.sort_values(by='distance')  #指定列进行排序，需要返回值
@@ -70,7 +70,7 @@ def knn_core(pd_test,pd_train,k_list,result):
         result.append([test_class,neighbor])
 
 #传入训练集和测试集，都是dataframe类型，并使用多线程来处理测试集
-def knn(pd_train,pd_test,k_list):
+def knn(pd_train,pd_test,k_list,feature_name):
     #对于每个测试集
     begin = time.time()
     result = Manager().list()  #进程各自持有一份数据，默认无法共享数据，因此使用manager的list实现数据共享，注意，这个是在下面的append、get出错之后采取的第二种方法
@@ -78,11 +78,10 @@ def knn(pd_train,pd_test,k_list):
     pool = multiprocessing.Pool()  # 创建4个进程，进程池设置最好等于CPU核心数量
     multi_data = __getSplitPDData(pd_test,POOL_NUM)  #等分成POOL_NUM份
     for data in multi_data:
-        pool.apply_async(knn_core,(data, pd_train, k_list, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
+        pool.apply_async(knn_core,(data, pd_train, k_list, feature_name, result))  # 注意，最好在真实的数据集上跑完整个，再在多进程中跑，因为多进程不会爆出完整的错误
     pool.close()  # 关闭进程池，表示不能再往进程池中添加进程，需要在join之前调用，close()会等待池中的worker进程执行结束再关闭pool,而terminate()则是直接关闭
     pool.join()  # 等待进程池中的所有进程执行完毕
     end = time.time()
     print("total time:",end-begin)
-
     #对result进行处理，不知道为什么会是ListProxy object，用list()转为list
     return list(result)
