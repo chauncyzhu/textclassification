@@ -2,8 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/multiclass.iml" filepath="$PROJECT_DIR$/.idea/multiclass.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../CRF/.idea/CRF.iml" filepath="$PROJECT_DIR$/../CRF/.idea/CRF.iml" />
+      <module fileurl="file://D:\Coding\pycharm-professional\pycharm-file\textclassification\.idea\multiclass.iml" filepath="D:\Coding\pycharm-professional\pycharm-file\textclassification\.idea\multiclass.iml" />
       <module fileurl="file://$PROJECT_DIR$/../pythondata/.idea/pythondata.iml" filepath="$PROJECT_DIR$/../pythondata/.idea/pythondata.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../quoraquestionpairs/.idea/quoraquestionpairs.iml" filepath="$PROJECT_DIR$/../quoraquestionpairs/.idea/quoraquestionpairs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../sentimentanalysis/.idea/sentimentanalysis.iml" filepath="$PROJECT_DIR$/../sentimentanalysis/.idea/sentimentanalysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../squad/.idea/squad.iml" filepath="$PROJECT_DIR$/../squad/.idea/squad.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/textclassification.iml" filepath="$PROJECT_DIR$/.idea/textclassification.iml" />
     </modules>
   </component>

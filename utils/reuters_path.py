@@ -21,5 +21,10 @@ TEST_BINARY_BDC_CSV = REUTERS + "/binaryclass/reuter_test_binaryclass_bdc.csv"  
 TRAIN_BINARY_DF_BDC_CSV = REUTERS + "/binaryclass/reuter_train_binaryclass_df_bdc.csv"  # 分开的训练集
 TEST_BINARY_DF_BDC_CSV = REUTERS + "/binaryclass/reuter_test_binaryclass_df_bdc.csv"  # 分开的测试集
 
-EVALUATION_BIANRY_BDC_CSV = REUTERS + "/evaluation/evaluation_binary_bdc_csv.csv"  # 多分类结果集
+EVALUATION_BIANRY_BDC_CSV = REUTERS + "/evaluation/evaluation_binary_bdc_csv.csv"  # 二分类结果集
 EVALUATION_BINARY_DF_BDC_CSV = REUTERS + "/evaluation/evaluation_binary_df_bdc_csv.csv"  # 二分类结果集
+
+EVALUATION_MULTI_BDC_CSV = REUTERS + "/evaluation/evaluation_multi_bdc_csv.csv"  # 多分类结果集
+EVALUATION_MULTI_DF_BDC_CSV = REUTERS + "/evaluation/evaluation_multi_df_bdc_csv.csv"  # 多分类结果集
+
+MULTI_BDC_CSV = REUTERS + "/evaluation/multi_bdc_csv.csv"

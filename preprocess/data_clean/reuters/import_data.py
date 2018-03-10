@@ -110,6 +110,6 @@ def getTrainAndTest(sourcefile,class_num):
 
 
 if __name__ == '__main__':
-    sourcefile = "../../data/reuters/reuter_all.xml"
+    sourcefile = "D:/Coding/pycharm-professional/pycharm-file/pythondata/reuters/reuter_all.xml"
     class_num = 8
     getTrainAndTest(sourcefile, class_num)

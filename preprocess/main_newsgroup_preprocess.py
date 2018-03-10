@@ -13,7 +13,9 @@ CONFIRM_POS_CLASS = 0  #指定二分类正类序号
 #数据清理和字典获取，多分类和二分类的class_num不一样
 def __voca_dict(class_num,voca_csv=None):
     #读取数据并转为dataframe
-    pd_train, pd_test = id.getTrainAndTest(path.SOURCEFILE)
+    #pd_train, pd_test = id.getTrainAndTest(path.SOURCEFILE)   #如果训练集和测试集需要分开
+    pd_train = id.getPDData(path.TRAIN_TEXT)
+    pd_test = id.getPDData(path.TEST_TEXT)
     cd.clean_data(pd_train)  #分词（如果需要清理可以进行清理）
     cd.clean_data(pd_test)
 
@@ -25,7 +27,7 @@ def __voca_dict(class_num,voca_csv=None):
 
     # 如需增加更多term weighting schema，在这里添加
     feature.getBDCVector(voca_dict, class_num, "bdc")  # 根据字典计算BDC值，需要指定index
-    feature.getDFBDCVector(voca_dict, class_num, "df_bdc")  # 根据字典计算DF_BDC值，需要指定index
+    #feature.getDFBDCVector(voca_dict, class_num, "df_bdc")  # 根据字典计算DF_BDC值，需要指定index
     feature.getTotalVoca(pd_test, voca_dict)  # 将测试集中的特征加入到词典中
 
     if voca_csv:  # 如果存在则写入文件中
@@ -50,14 +52,14 @@ def __generate_vector(pd_train,pd_test,voca_dict,feature_name,train_csv=None,tes
 
 #多分类的数据处理操作
 def multi_class_data():
-    class_num = 6  # 多分类的类别个数，newsgroup最多只有6个类别
+    class_num = 20  # 多分类的类别个数，newsgroup最多只有6个类别
 
     pd_train, pd_test,voca_dict = __voca_dict(class_num, voca_csv=path.VOCA_MULTI_CSV)  #获取多分类的字典，包括
     __generate_vector(pd_train, pd_test, voca_dict,"bdc", train_csv=path.TRAIN_MULTI_BDC_CSV, test_csv=path.TEST_MULTI_BDC_CSV)
-    __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_MULTI_DF_BDC_CSV, test_csv=path.TEST_MULTI_DF_BDC_CSV)
+    #__generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_MULTI_DF_BDC_CSV, test_csv=path.TEST_MULTI_DF_BDC_CSV)
 
 
-#获得多分类数据
+#获得二分类数据
 def binary_class_data():
     class_num = 2  # 二分类的类别个数
 
@@ -76,5 +78,5 @@ def binary_class_data():
     __generate_vector(pd_train, pd_test, voca_dict,"df_bdc", train_csv=path.TRAIN_BINARY_DF_BDC_CSV, test_csv=path.TEST_BINARY_DF_BDC_CSV)
 
 if __name__ == '__main__':
-    #multi_class_data()
-    binary_class_data()
+    multi_class_data()
+    #binary_class_data()

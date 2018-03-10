@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/product_phone/phone.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/sentimentDict/neg1-hownet.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/sentimentDict/neg2-hownet.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/sentimentDict/plus-hownet.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/sentimentDict/pos1-hownet.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/sentimentDict/pos2-hownet.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/weibo_four_sentiment/README-datatang.txt" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/../pythondata/sentiment/weibo_four_sentiment/readme.txt" charset="GBK" />
+  </component>
+</project>

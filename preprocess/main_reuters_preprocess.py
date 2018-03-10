@@ -20,8 +20,10 @@ def __voca_dict(class_num,voca_csv=None):
     # 处理测试集
     cd.clean_data(pd_test)
 
+    # pd_train = pd_train.head(int(len(pd_train)/2))  #控制训练集个数，由于二分类中不均衡
+    # pd_test = pd_test.head(int(len(pd_test)/2))  #控制测试集个数
+
     #获取分类字典，如果是多分类class_num>2，如果是二分类，class_num=2
-    #pd_train = pd_train.head(100)  #控制训练集个数
     voca_dict = vd.getRelativeValue(pd_train,vd.getUniqueVocabulary(pd_train),class_num)   #getUniqueVocabulary比较耗时，存储在csv中
 
     # 如需增加更多term weighting schema，在这里添加
